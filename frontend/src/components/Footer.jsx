@@ -24,7 +24,7 @@ export default function Footer() {
         <div className="ending-sculpture" ref={sculpture}>
           <div className="ending-light"/>
           <div className="ending-dimension ending-dimension-height"><span>YOUR IDEAS</span></div><div className="ending-dimension ending-dimension-width"><span>TAKE SHAPE</span></div>
-          <div className="ending-object"><img src="/products/planter.webp" alt="" width="640" height="640" loading="lazy"/></div>
+          <div className="ending-object ending-printer"><img src="/scene-printer.png" alt="" width="1280" height="1280" loading="lazy"/></div>
           <div className="ending-object-shadow"/>
           <div className="ending-print-bed">{Array.from({length:6},(_,index)=><span key={index} style={{'--layer':index}}/>)}<b>✳</b></div>
           <span className="ending-art-label">SCÈNE / A NEW DIMENSION</span><span className="ending-plus ending-plus-one">＋</span><span className="ending-plus ending-plus-two">＋</span>

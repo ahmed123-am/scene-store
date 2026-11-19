@@ -1,6 +1,7 @@
 import { readProducts } from './catalog.js';
 import { createOrder } from './orders.js';
 import { HttpError } from './errors.js';
+import { notifyNewOrder } from './notifications.js';
 
 const bodyLimit = 16 * 1024;
 
@@ -77,6 +78,7 @@ export async function handleRequest(request, response) {
       }
       const body = await readJson(request);
       const result = await createOrder(body, request.headers['idempotency-key']);
+      await notifyNewOrder(result);
       send(response, result.replayed ? 200 : 201, result.order);
       return;
     }

@@ -13,6 +13,14 @@ export function usesSupabase() {
 }
 
 export async function supabaseRequest(path, options = {}) {
+  return request('/rest/v1/', path, options);
+}
+
+export async function supabaseStorageRequest(path, options = {}) {
+  return request('/storage/v1/', path, options);
+}
+
+async function request(prefix, path, options) {
   const base = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!base || !key) throw new HttpError(503, 'إعدادات قاعدة البيانات غير مكتملة.');
@@ -27,7 +35,7 @@ export async function supabaseRequest(path, options = {}) {
 
   let response;
   try {
-    response = await fetch(new URL('/rest/v1/' + path, url), {
+    response = await fetch(new URL(prefix + path, url), {
       ...options,
       headers,
       signal: AbortSignal.timeout(12000),

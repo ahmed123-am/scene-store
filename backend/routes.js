@@ -3,16 +3,17 @@ import { createOrder } from './orders.js';
 import { HttpError } from './errors.js';
 import { notifyNewOrder } from './notifications.js';
 import { checkAdminOrigin, requireAdmin, loginAdmin, logoutAdmin, listAdminOrders, updateAdminStatus } from './admin.js';
+import { listAdminProducts, saveAdminProduct, deleteAdminProduct, uploadAdminProductImage } from './admin-products.js';
 
 const bodyLimit = 16 * 1024;
 
-function readJson(request) {
+function readJson(request, limit = bodyLimit) {
   if ('body' in request) {
     try {
       const parsed = request.body;
       const serialized = JSON.stringify(parsed);
       if (serialized === undefined) throw new Error('Missing JSON');
-      if (Buffer.byteLength(serialized) > bodyLimit) {
+      if (Buffer.byteLength(serialized) > limit) {
         return Promise.reject(new HttpError(413, 'بيانات الطلب أكبر من المسموح.'));
       }
       return Promise.resolve(parsed);
@@ -26,11 +27,11 @@ function readJson(request) {
 
     request.on('data', (chunk) => {
       size += chunk.length;
-      if (size <= bodyLimit) chunks.push(chunk);
+      if (size <= limit) chunks.push(chunk);
       else chunks = [];
     });
     request.on('end', () => {
-      if (size > bodyLimit) {
+      if (size > limit) {
         reject(new HttpError(413, 'بيانات الطلب أكبر من المسموح.'));
         return;
       }
@@ -83,6 +84,18 @@ export async function handleRequest(request, response) {
           return;
         }
         await requireAdmin(request);
+        if (action === 'product-save') {
+          send(response, 200, await saveAdminProduct(await readJson(request)));
+          return;
+        }
+        if (action === 'product-delete') {
+          send(response, 200, await deleteAdminProduct(await readJson(request)));
+          return;
+        }
+        if (action === 'product-image') {
+          send(response, 200, await uploadAdminProductImage(await readJson(request, 3 * 1024 * 1024)));
+          return;
+        }
         if (action === 'status') {
           send(response, 200, await updateAdminStatus(await readJson(request)));
           return;
@@ -91,6 +104,7 @@ export async function handleRequest(request, response) {
         const user = await requireAdmin(request);
         if (action === 'session') { send(response, 200, { user }); return; }
         if (action === 'orders') { send(response, 200, await listAdminOrders(params)); return; }
+        if (action === 'products') { send(response, 200, await listAdminProducts()); return; }
       }
       send(response, 404, { error: 'Not found' });
       return;

@@ -1,22 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './admin.css';
+import { adminApi as api } from './api.js';
+import Products from './Products.jsx';
 
 const labels = { pending: 'جديد', confirmed: 'تم التأكيد', shipped: 'اتشحن', completed: 'اكتمل', cancelled: 'ملغي' };
 const money = value => new Intl.NumberFormat('ar-EG', { style: 'currency', currency: 'EGP', maximumFractionDigits: 0 }).format(value / 100);
 const date = value => new Intl.DateTimeFormat('ar-EG', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Africa/Cairo' }).format(new Date(value));
 
-async function api(action, body, signal) {
-  const response = await fetch('/api/admin?action=' + action, {
-    method: body === undefined ? 'GET' : 'POST', credentials: 'same-origin', cache: 'no-store', signal,
-    headers: body === undefined ? {} : { 'Content-Type': 'application/json' },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-  const data = await response.json();
-  if (!response.ok) { const error = new Error(data.error || 'تعذّر إتمام العملية.'); error.status = response.status; throw error; }
-  return data;
-}
-
 export default function Admin() {
+  const [section, setSection] = useState('orders');
   const [session, setSession] = useState(undefined);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
@@ -104,7 +96,10 @@ export default function Admin() {
       <aside className="admin-sidebar">
         <a href="/" className="admin-brand"><img src="/scene.jpeg" alt="سين" /><span>SCÈNE<small>مساحة الإدارة</small></span></a>
         <div className="admin-side-label">الاستوديو بتاعك</div>
-        <span className="admin-nav-active">▤ <span>الطلبات</span><span>↖</span></span>
+        <nav className="admin-sections" aria-label="أقسام الإدارة">
+          <button type="button" className={section === 'orders' ? 'admin-nav-active' : ''} aria-current={section === 'orders' ? 'page' : undefined} onClick={() => setSection('orders')}>▤ <span>الطلبات</span><span>↖</span></button>
+          <button type="button" className={section === 'products' ? 'admin-nav-active' : ''} aria-current={section === 'products' ? 'page' : undefined} onClick={() => setSection('products')}>◇ <span>المنتجات</span><span>↖</span></button>
+        </nav>
         <a href="/" className="admin-store-link">افتح المتجر ↗</a>
         <p className="admin-side-note">من أول فكرة،<br />لحد باب العميل.</p>
         <span className="admin-side-bottom">SCÈNE / ORDER DESK</span>
@@ -125,7 +120,7 @@ export default function Admin() {
               <button className="admin-primary" disabled={busy}>{busy ? 'بنسجّل الدخول…' : 'ادخل الاستوديو ↖'}</button>
             </form>
           </section>
-        ) : (
+        ) : section === 'products' ? <Products onSessionExpired={() => { setSession(null); setOrders([]); }} /> : (
           <section className="admin-content">
             <div className="admin-heading"><div><span className="admin-eyebrow">من المتجر للاستوديو</span><h1>طلبات سين<span>.</span></h1><p>كل التفاصيل في مكان واحد، من أول طلب لحد التسليم.</p></div><button className="admin-refresh" disabled={loading || busy} onClick={() => setRefresh(value => value + 1)}>تحديث الطلبات ↻</button></div>
             <div className="admin-stats"><div><span>الطلبات المعروضة</span><strong>{loading ? '—' : orders.length.toLocaleString('ar-EG')}</strong></div><div><span>قيمة المنتجات في الصفحة</span><strong>{loading ? '—' : money(pageTotal)}</strong><small>بدون الشحن · يشمل الملغي لو ظاهر</small></div><div className="admin-stat-accent"><span>المرحلة الحالية</span><strong>{filter ? labels[filter] : 'كل الطلبات'}</strong><small>الصفحة {(page + 1).toLocaleString('ar-EG')}</small></div></div>

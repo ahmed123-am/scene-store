@@ -96,7 +96,7 @@ export async function listAdminOrders(params) {
     throw new HttpError(400, 'فلتر الطلبات غير صحيح.');
   }
   const query = new URLSearchParams({
-    select: 'id,created_at,product_id,product_name,quantity,unit_price_cents,subtotal_cents,customer_name,phone,address,notes,status',
+    select: 'id,created_at,product_id,product_name,quantity,unit_price_cents,subtotal_cents,customer_name,phone,address,notes,status,items',
     order: 'created_at.desc,id.desc', limit: '21', offset: String(page * 20),
   });
   if (status) query.set('status', 'eq.' + status);

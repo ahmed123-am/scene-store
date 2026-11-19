@@ -33,7 +33,7 @@ if (existsSync(localDatabase)) {
   const orders = database.prepare('SELECT * FROM orders ORDER BY created_at').all();
   database.close();
   for (let offset = 0; offset < orders.length; offset += 100) {
-    const batch = orders.slice(offset, offset + 100);
+    const batch = orders.slice(offset, offset + 100).map(row => ({ ...row, items: row.items ? JSON.parse(row.items) : [] }));
     await supabaseRequest('orders?on_conflict=idempotency_key', {
       method: 'POST',
       headers: {

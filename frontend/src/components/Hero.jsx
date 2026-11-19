@@ -116,7 +116,7 @@ export default function Hero({ onInquiry, onOrder }) {
             <p className="theater-product-name">{product.name}</p>
             <p className="theater-price">{priceFormatter.format(product.price)}</p>
             <div className="product-actions">
-              <button type="button" className="theater-link" onClick={() => onOrder(product)}>اطلب دلوقتي <span aria-hidden="true">↙</span></button>
+              <button type="button" className="theater-link" onClick={() => onOrder(product)}>ضيف للسلة <span aria-hidden="true">＋</span></button>
               <a href="#contact" className="product-question" onClick={() => onInquiry(product)}>عندك سؤال؟</a>
             </div>
           </div>

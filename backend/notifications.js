@@ -9,7 +9,7 @@ export async function notifyNewOrder(result) {
   const text = [
     '📦 طلب جديد — SCÈNE',
     `رقم الطلب: ${order.id}`,
-    `المجسم: ${order.productName}`,
+    ...(order.items?.length ? order.items.map(item => `• ${item.productName} × ${item.quantity} — ${item.subtotal} جنيه`) : [`المجسم: ${order.productName}`]),
     `الكمية: ${order.quantity}`,
     `قيمة المنتجات: ${order.subtotal} جنيه`,
     'الحالة: بانتظار التأكيد',

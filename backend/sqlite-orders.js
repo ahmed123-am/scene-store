@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
 import { HttpError } from './errors.js';
 import { readProducts } from './catalog.js';
-import { normalizeOrder } from './order-validation.js';
+import { normalizeOrder, normalizeCartOrder, cartFingerprint } from './order-validation.js';
 
 const databasePath = process.env.SCENE_ORDER_DB
   ?? fileURLToPath(new URL('./data/orders.sqlite', import.meta.url));
@@ -28,9 +28,15 @@ database.exec(
 );
 
 const findOrder = database.prepare('SELECT * FROM orders WHERE idempotency_key = ?');
+if (!database.prepare('PRAGMA table_info(orders)').all().some(column => column.name === 'items')) {
+  database.exec("ALTER TABLE orders ADD COLUMN items TEXT NOT NULL DEFAULT '[]'");
+}
 const insertOrder = database.prepare(
-  'INSERT INTO orders VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' +
+  'INSERT INTO orders (id,idempotency_key,request_hash,created_at,product_id,product_name,quantity,unit_price_cents,subtotal_cents,customer_name,phone,address,notes,status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' +
   ' ON CONFLICT(idempotency_key) DO NOTHING',
+);
+const insertCartOrder = database.prepare(
+  'INSERT INTO orders (id,idempotency_key,request_hash,created_at,product_id,product_name,quantity,unit_price_cents,subtotal_cents,customer_name,phone,address,notes,status,items) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(idempotency_key) DO NOTHING',
 );
 
 function receipt(order) {
@@ -43,7 +49,33 @@ function receipt(order) {
     unitPrice: order.unit_price_cents / 100,
     subtotal: order.subtotal_cents / 100,
     currency: 'EGP',
+    items: order.items && JSON.parse(order.items).length ? JSON.parse(order.items) : [{ productId: order.product_id, productName: order.product_name, quantity: order.quantity, unitPrice: order.unit_price_cents / 100, subtotal: order.subtotal_cents / 100 }],
   };
+}
+
+export async function createCartOrder(input, key) {
+  if (typeof key !== 'string' || !/^[A-Za-z0-9_-]{16,100}$/.test(key)) throw new HttpError(400, 'معرّف محاولة الطلب غير صحيح.');
+  const order = normalizeCartOrder(input);
+  const hash = createHash('sha256').update(cartFingerprint(order)).digest('hex');
+  const existing = findOrder.get(key);
+  if (existing) return { order: checkRetry(existing, hash), replayed: true };
+  const catalog = await readProducts();
+  let totalCents = 0;
+  const items = order.items.map(line => {
+    const product = catalog.find(item => item.id === line.productId);
+    if (!product) throw new HttpError(409, 'منتج في السلة مبقاش متاح. حدّث السلة وراجع المنتجات.');
+    const cents = Math.round(product.price * 100);
+    if (!Number.isSafeInteger(cents) || cents < 0 || !Number.isSafeInteger(cents * line.quantity)) throw new HttpError(503, 'سعر المنتج غير متاح.');
+    if (line.expectedPriceCents !== null && line.expectedPriceCents !== cents) throw new HttpError(409, 'سعر منتج في السلة اتغيّر. حدّث السلة وراجع الإجمالي قبل التأكيد.');
+    totalCents += cents * line.quantity;
+    return { productId: product.id, productName: product.name, quantity: line.quantity, unitPrice: cents / 100, subtotal: cents * line.quantity / 100 };
+  });
+  if (!Number.isSafeInteger(totalCents)) throw new HttpError(400, 'قيمة الطلب أكبر من المسموح.');
+  const first = items[0];
+  const id = 'SCN-' + randomUUID();
+  insertCartOrder.run(id,key,hash,new Date().toISOString(),first.productId,first.productName + (items.length > 1 ? ' + ' + (items.length - 1) : ''),items.reduce((sum,item)=>sum+item.quantity,0),Math.round(first.unitPrice*100),totalCents,order.name,order.phone,order.address,order.notes,'pending',JSON.stringify(items));
+  const saved = findOrder.get(key);
+  return { order: checkRetry(saved, hash), replayed: saved.id !== id };
 }
 
 function checkRetry(order, hash) {

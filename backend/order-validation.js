@@ -36,4 +36,35 @@ export function normalizeOrder(input) {
   };
 }
 
+export function normalizeCartOrder(input) {
+  if (!input || !Array.isArray(input.items) || input.items.length < 1 || input.items.length > 20) {
+    throw new HttpError(400, 'السلة لازم تحتوي من منتج واحد لـ٢٠ منتج مختلف.');
+  }
+  const seen = new Set();
+  let totalQuantity = 0;
+  const items = input.items.map(item => {
+    if (!item || typeof item !== 'object') throw new HttpError(400, 'راجع منتجات السلة.');
+    const productId = text(item.productId, 'المجسم', 1, 120);
+    if (seen.has(productId)) throw new HttpError(400, 'المنتج متكرر في السلة. اجمع كميته في سطر واحد.');
+    seen.add(productId);
+    if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 50) throw new HttpError(400, 'راجع كميات المنتجات.');
+    totalQuantity += item.quantity;
+    let expectedPriceCents = null;
+    if (item.expectedUnitPrice !== undefined) {
+      expectedPriceCents = Math.round(item.expectedUnitPrice * 100);
+      if (typeof item.expectedUnitPrice !== 'number' || !Number.isSafeInteger(expectedPriceCents) || expectedPriceCents < 0) {
+        throw new HttpError(400, 'السعر المتوقع غير صحيح.');
+      }
+    }
+    return { productId, quantity: item.quantity, expectedPriceCents };
+  }).sort((a, b) => a.productId < b.productId ? -1 : a.productId > b.productId ? 1 : 0);
+  if (totalQuantity > 50) throw new HttpError(400, 'الحد الأقصى للطلب ٥٠ قطعة.');
+  const customer = normalizeOrder({ ...input, productId: items[0].productId, quantity: 1 });
+  return { items, name: customer.name, phone: customer.phone, address: customer.address, notes: customer.notes };
+}
+
+export function cartFingerprint(order) {
+  return JSON.stringify({ ...order, items: order.items.map(({ productId, quantity }) => ({ productId, quantity })) });
+}
+
 

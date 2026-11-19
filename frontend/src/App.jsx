@@ -6,11 +6,15 @@ import About from './components/About.jsx';
 import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
 import OrderDialog from './components/OrderDialog.jsx';
+import { useCart } from './hooks/useCart.js';
+import './cart.css';
 
 export default function App() {
   const pageRef = useRef(null);
   const [inquiryProduct, setInquiryProduct] = useState(null);
-  const [orderProduct, setOrderProduct] = useState(null);
+  const [cartOpen, setCartOpen] = useState(false);
+  const cart = useCart();
+  const cartCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
     const elements = pageRef.current.querySelectorAll('.reveal');
@@ -70,7 +74,7 @@ export default function App() {
       <Header />
 
       <main>
-        <Hero onInquiry={setInquiryProduct} onOrder={setOrderProduct} />
+        <Hero onInquiry={setInquiryProduct} onOrder={cart.add} />
 
         <div className="reveal">
           <About />
@@ -78,7 +82,9 @@ export default function App() {
         
         <div className="reveal"><Contact product={inquiryProduct} /></div>
       </main>
-      <OrderDialog product={orderProduct} onClose={() => setOrderProduct(null)} />
+      <button className="cart-floating" type="button" onClick={() => setCartOpen(true)} aria-label={'افتح سلة المشتريات، ' + cartCount + ' قطعة'}><span>السلة</span><strong>{cartCount}</strong><span aria-hidden="true">↖</span></button>
+      {!cartOpen && cart.notice && <p className="cart-toast" role="status">{cart.notice}</p>}
+      <OrderDialog open={cartOpen} cart={cart} onClose={() => setCartOpen(false)} />
 
       <div className="reveal">
         <Footer />

@@ -3,6 +3,7 @@ import './admin.css';
 import { adminApi as api } from './api.js';
 import Products from './Products.jsx';
 import OrderItems from './OrderItems.jsx';
+import CustomRequests from './CustomRequests.jsx';
 
 const labels = { pending: 'جديد', confirmed: 'تم التأكيد', shipped: 'اتشحن', completed: 'اكتمل', cancelled: 'ملغي' };
 const money = value => new Intl.NumberFormat('ar-EG', { style: 'currency', currency: 'EGP', maximumFractionDigits: 0 }).format(value / 100);
@@ -100,6 +101,7 @@ export default function Admin() {
         <nav className="admin-sections" aria-label="أقسام الإدارة">
           <button type="button" className={section === 'orders' ? 'admin-nav-active' : ''} aria-current={section === 'orders' ? 'page' : undefined} onClick={() => setSection('orders')}>▤ <span>الطلبات</span><span>↖</span></button>
           <button type="button" className={section === 'products' ? 'admin-nav-active' : ''} aria-current={section === 'products' ? 'page' : undefined} onClick={() => setSection('products')}>◇ <span>المنتجات</span><span>↖</span></button>
+          <button type="button" className={section === 'custom' ? 'admin-nav-active' : ''} aria-current={section === 'custom' ? 'page' : undefined} onClick={() => setSection('custom')}>✦ <span>طلبات مخصوص</span><span>↖</span></button>
         </nav>
         <a href="/" className="admin-store-link">افتح المتجر ↗</a>
         <p className="admin-side-note">من أول فكرة،<br />لحد باب العميل.</p>
@@ -121,7 +123,7 @@ export default function Admin() {
               <button className="admin-primary" disabled={busy}>{busy ? 'بنسجّل الدخول…' : 'ادخل الاستوديو ↖'}</button>
             </form>
           </section>
-        ) : section === 'products' ? <Products onSessionExpired={() => { setSession(null); setOrders([]); }} /> : (
+        ) : section === 'products' ? <Products onSessionExpired={() => { setSession(null); setOrders([]); }} /> : section === 'custom' ? <CustomRequests onSessionExpired={() => { setSession(null); setOrders([]); }} /> : (
           <section className="admin-content">
             <div className="admin-heading"><div><span className="admin-eyebrow">من المتجر للاستوديو</span><h1>طلبات سين<span>.</span></h1><p>كل التفاصيل في مكان واحد، من أول طلب لحد التسليم.</p></div><button className="admin-refresh" disabled={loading || busy} onClick={() => setRefresh(value => value + 1)}>تحديث الطلبات ↻</button></div>
             <div className="admin-stats"><div><span>الطلبات المعروضة</span><strong>{loading ? '—' : orders.length.toLocaleString('ar-EG')}</strong></div><div><span>قيمة المنتجات في الصفحة</span><strong>{loading ? '—' : money(pageTotal)}</strong><small>بدون الشحن · يشمل الملغي لو ظاهر</small></div><div className="admin-stat-accent"><span>المرحلة الحالية</span><strong>{filter ? labels[filter] : 'كل الطلبات'}</strong><small>الصفحة {(page + 1).toLocaleString('ar-EG')}</small></div></div>

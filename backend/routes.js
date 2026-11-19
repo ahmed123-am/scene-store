@@ -1,7 +1,8 @@
 import { readProducts } from './catalog.js';
 import { createOrder } from './orders.js';
 import { HttpError } from './errors.js';
-import { notifyNewOrder } from './notifications.js';
+import { notifyNewOrder, notifyCustomRequest } from './notifications.js';
+import { createCustomRequest, listCustomRequests, customRequestDetail, updateCustomStatus } from './custom-requests.js';
 import { checkAdminOrigin, requireAdmin, loginAdmin, logoutAdmin, listAdminOrders, updateAdminStatus } from './admin.js';
 import { listAdminProducts, saveAdminProduct, deleteAdminProduct, uploadAdminProductImage } from './admin-products.js';
 
@@ -84,6 +85,10 @@ export async function handleRequest(request, response) {
           return;
         }
         await requireAdmin(request);
+        if (action === 'custom-status') {
+          send(response, 200, await updateCustomStatus(await readJson(request)));
+          return;
+        }
         if (action === 'product-save') {
           send(response, 200, await saveAdminProduct(await readJson(request)));
           return;
@@ -105,8 +110,19 @@ export async function handleRequest(request, response) {
         if (action === 'session') { send(response, 200, { user }); return; }
         if (action === 'orders') { send(response, 200, await listAdminOrders(params)); return; }
         if (action === 'products') { send(response, 200, await listAdminProducts()); return; }
+        if (action === 'custom-orders') { send(response, 200, await listCustomRequests(params)); return; }
+        if (action === 'custom-detail') { send(response, 200, await customRequestDetail(params.get('id'))); return; }
       }
       send(response, 404, { error: 'Not found' });
+      return;
+    }
+    if (path === '/api/custom-orders') {
+      if (request.method !== 'POST') { send(response,405,{error:'Method not allowed'},{Allow:'POST'}); return; }
+      checkAdminOrigin(request);
+      if (request.headers['content-type']?.split(';')[0].trim().toLowerCase() !== 'application/json') throw new HttpError(415,'نوع بيانات الطلب غير صحيح.');
+      const result = await createCustomRequest(await readJson(request,3*1024*1024),request.headers['idempotency-key'],request);
+      await notifyCustomRequest(result);
+      send(response,result.replayed ? 200 : 201,result.receipt);
       return;
     }
     if (path === '/api/products') {

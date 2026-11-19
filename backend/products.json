@@ -1,0 +1,87 @@
+[
+  {
+    "id": "demo-astronaut",
+    "name": "رائد الفضاء",
+    "price": 650,
+    "image": "/products/astronaut.png",
+    "heroImage": "/products/astronaut-cutout.webp"
+  },
+  {
+    "id": "demo-dragon",
+    "name": "التنين الأخضر",
+    "price": 850,
+    "image": "/products/dragon.png",
+    "heroImage": "/products/dragon-cutout.webp"
+  },
+  {
+    "id": "demo-vase",
+    "name": "فازة تويست",
+    "price": 450,
+    "image": "/products/vase.png",
+    "heroImage": "/products/vase-cutout.webp"
+  },
+  {
+    "id": "demo-robot",
+    "name": "روبوت صغير",
+    "price": 480,
+    "image": "/products/robot.webp",
+    "heroImage": "/products/robot.webp"
+  },
+  {
+    "id": "demo-fox",
+    "name": "الثعلب الهندسي",
+    "price": 420,
+    "image": "/products/fox.webp",
+    "heroImage": "/products/fox.webp"
+  },
+  {
+    "id": "demo-cat",
+    "name": "قطة هادية",
+    "price": 350,
+    "image": "/products/cat.webp",
+    "heroImage": "/products/cat.webp"
+  },
+  {
+    "id": "demo-owl",
+    "name": "بومة صغيرة",
+    "price": 390,
+    "image": "/products/owl.webp",
+    "heroImage": "/products/owl.webp"
+  },
+  {
+    "id": "demo-turtle",
+    "name": "السلحفاة",
+    "price": 320,
+    "image": "/products/turtle.webp",
+    "heroImage": "/products/turtle.webp"
+  },
+  {
+    "id": "demo-mushroom",
+    "name": "مجسم فطر",
+    "price": 280,
+    "image": "/products/mushroom.webp",
+    "heroImage": "/products/mushroom.webp"
+  },
+  {
+    "id": "demo-skull",
+    "name": "جمجمة هندسية",
+    "price": 400,
+    "image": "/products/skull.webp",
+    "heroImage": "/products/skull.webp"
+  },
+  {
+    "id": "demo-planter",
+    "name": "أصيص وجه",
+    "price": 360,
+    "image": "/products/planter.webp",
+    "heroImage": "/products/planter.webp"
+  },
+  {
+    "id": "demo-heart",
+    "name": "قلب هندسي",
+    "price": 300,
+    "image": "/products/heart.webp",
+    "heroImage": "/products/heart.webp"
+  }
+]
+

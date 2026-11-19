@@ -1,0 +1,13 @@
+{
+  "name": "scene-store",
+  "private": true,
+  "type": "module",
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "dev": "npm run dev --workspace=frontend",
+    "api": "npm run dev --workspace=backend",
+    "build": "npm run build --workspace=frontend",
+    "sync:supabase": "node --env-file-if-exists=.env.local scripts/sync-supabase.mjs"
+  },
+  "engines": { "node": "24.x" }
+}

@@ -2,6 +2,7 @@ import { readProducts } from './catalog.js';
 import { createOrder } from './orders.js';
 import { HttpError } from './errors.js';
 import { notifyNewOrder } from './notifications.js';
+import { checkAdminOrigin, requireAdmin, loginAdmin, logoutAdmin, listAdminOrders, updateAdminStatus } from './admin.js';
 
 const bodyLimit = 16 * 1024;
 
@@ -58,6 +59,42 @@ export async function handleRequest(request, response) {
   const path = request.url.split('?')[0];
 
   try {
+    if (path === '/api/admin') {
+      response.setHeader('Cache-Control', 'no-store, private');
+      response.setHeader('X-Content-Type-Options', 'nosniff');
+      const params = new URL(request.url, 'http://localhost').searchParams;
+      const action = params.get('action') || 'session';
+      if (!['GET', 'POST'].includes(request.method)) {
+        send(response, 405, { error: 'Method not allowed' }, { Allow: 'GET, POST' });
+        return;
+      }
+      if (request.method === 'POST') {
+        checkAdminOrigin(request);
+        if (action === 'logout') {
+          send(response, 200, { ok: true }, { 'Set-Cookie': await logoutAdmin(request) });
+          return;
+        }
+        if (request.headers['content-type']?.split(';')[0].trim().toLowerCase() !== 'application/json') {
+          throw new HttpError(415, 'نوع بيانات الطلب غير صحيح.');
+        }
+        if (action === 'login') {
+          const result = await loginAdmin(await readJson(request));
+          send(response, 200, { user: result.user }, { 'Set-Cookie': result.cookie });
+          return;
+        }
+        await requireAdmin(request);
+        if (action === 'status') {
+          send(response, 200, await updateAdminStatus(await readJson(request)));
+          return;
+        }
+      } else {
+        const user = await requireAdmin(request);
+        if (action === 'session') { send(response, 200, { user }); return; }
+        if (action === 'orders') { send(response, 200, await listAdminOrders(params)); return; }
+      }
+      send(response, 404, { error: 'Not found' });
+      return;
+    }
     if (path === '/api/products') {
       if (request.method !== 'GET') {
         send(response, 405, { error: 'Method not allowed' }, { Allow: 'GET' });

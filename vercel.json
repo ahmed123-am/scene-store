@@ -4,6 +4,7 @@
   "installCommand": "npm ci",
   "buildCommand": "npm run build",
   "outputDirectory": "frontend/dist",
+  "rewrites": [{ "source": "/admin", "destination": "/index.html" }, { "source": "/admin/", "destination": "/index.html" }],
   "functions": {
     "api/*.js": {
       "maxDuration": 30,

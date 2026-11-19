@@ -1,0 +1,45 @@
+:root {
+  --scene-night:#18151f;
+  --scene-white:#f3edf9;
+  --scene-ink:#312242;
+  --scene-lilac:#d7caf1;
+  --scene-soft:#eee7f7;
+  --scene-lime:#d8f4a5;
+  --scene-purple:#72509c;
+  --scene-muted:#b8a9c8;
+  --scene-line:#b49cc930;
+  --blue:var(--scene-lilac);
+  --muted:var(--scene-muted);
+  --line:var(--scene-line);
+  color:var(--scene-white);
+  background:var(--scene-night);
+}
+body { background:var(--scene-night); }
+.site-header { color:var(--scene-ink);border-color:#31224222; }
+.site-header nav a:hover { background:var(--scene-ink);color:var(--scene-white); }
+.site-header nav .nav-contact { border-color:#31224244; }
+.product-actions .theater-link { background:var(--scene-ink);color:var(--scene-white); }
+.theater-link>span { color:var(--scene-lime); }
+.stage-arrow:hover { background:var(--scene-lime);color:var(--scene-ink); }
+.dock-cursor { background:var(--scene-purple);color:var(--scene-white); }
+.brand-story h2>span { color:var(--scene-lilac); }
+.brand-story .text-link { color:var(--scene-lime); }
+.brand-signature { border-color:var(--scene-line);background:#25202f; }
+.brand-signature p { color:var(--scene-muted); }
+.contact-scene { --contact-ink:var(--scene-ink);background:var(--scene-lilac); }
+.contact-scene-copy h2>span { color:var(--scene-purple); }.contact-scene-copy h2 em { color:var(--scene-ink); }.contact-scene-copy h2 em::after { background:var(--scene-lime); }
+.contact-custom-cta { background:var(--scene-ink);color:var(--scene-white); }.contact-custom-cta>span:last-child,.contact-maker-stamp { background:var(--scene-lime);color:var(--scene-ink); }
+.ticket-whatsapp { background:var(--scene-lime);color:var(--scene-ink); }.ticket-email,.contact-speech { background:var(--scene-soft);color:var(--scene-ink); }
+.contact-ticket::before,.contact-ticket::after { background:var(--scene-lilac); }
+.order-dialog { background:#f5f0fa;color:var(--scene-ink);border-color:#d7caf180; }.order-dialog::backdrop { background:#18151fb3; }
+.order-submit { background:var(--scene-ink);color:var(--scene-white); }.order-submit:hover { background:var(--scene-purple); }
+.order-close { border-color:#31224230; }.order-dialog input,.order-dialog textarea { color:var(--scene-ink);border-color:#31224235; }
+.order-dialog input:focus-visible,.order-dialog textarea:focus-visible { outline-color:var(--scene-purple); }
+.receipt-check { background:var(--scene-lime);color:var(--scene-ink); }
+.cart-floating { background:var(--scene-ink);color:var(--scene-white);border-color:#d7caf190; }.cart-floating strong { background:var(--scene-lime);color:var(--scene-ink); }
+.cart-toast { background:var(--scene-soft);color:var(--scene-ink);border-color:#baa2ce; }.cart-notice { background:#e4d8f2;color:var(--scene-ink); }
+.cart-summary-top button,.cart-continue { color:var(--scene-purple);border-color:#baa2ce; }
+.admin-shell { --admin-ink:var(--scene-ink);--admin-muted:#766780;--admin-line:#e2d9ea;background:#f6f2fa; }
+.admin-sidebar { background:var(--scene-night);color:var(--scene-white); }.admin-shell .admin-sections .admin-nav-active { background:var(--scene-lilac);color:var(--scene-ink); }
+.admin-shell .admin-primary { background:var(--scene-ink);border-color:var(--scene-ink);color:var(--scene-white); }.admin-shell .admin-primary:hover:not(:disabled) { background:var(--scene-purple); }
+.admin-shell .admin-stats .admin-stat-accent { background:#e4d8f2;border-color:#d8c9e8; }

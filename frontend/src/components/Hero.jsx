@@ -3,9 +3,9 @@ import { getProducts } from '../api/products.js';
 import WaveTitle from './WaveTitle.jsx';
 
 const themes = [
-  { background: '#d5d0f4', ink: '#342355', accent: '#5838c5' },
-  { background: '#d0e5ce', ink: '#183c30', accent: '#275d3f' },
-  { background: '#f2cbb6', ink: '#662e21', accent: '#923b25' },
+  { background: '#d7caf1', ink: '#312242', accent: '#72509c' },
+  { background: '#e4d9f3', ink: '#312242', accent: '#72509c' },
+  { background: '#cfc0e8', ink: '#312242', accent: '#72509c' },
 ];
 
 const priceFormatter = new Intl.NumberFormat('ar-EG', {

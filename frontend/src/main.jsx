@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import './index.css';
+import './theme.css';
 
 const Admin = lazy(() => import('./admin/Admin.jsx'));
 const isAdmin = window.location.pathname.replace(/\/$/, '') === '/admin';

@@ -6,7 +6,7 @@ export function usesSupabase() {
     process.env.SUPABASE_SECRET_KEY ||
     process.env.SUPABASE_SERVICE_ROLE_KEY,
   );
-  if (process.env.VERCEL && !configured) {
+  if ((process.env.VERCEL || process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME) && !configured) {
     throw new HttpError(503, 'قاعدة البيانات لسه مش متصلة.');
   }
   return configured;

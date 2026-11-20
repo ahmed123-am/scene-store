@@ -47,7 +47,7 @@ export function checkAdminOrigin(request) {
   let origin;
   try { origin = new URL(request.headers.origin); } catch { throw new HttpError(403, 'مصدر الطلب غير مسموح.'); }
   const host = request.headers.host;
-  const local = process.env.VERCEL ? false : ['localhost', '127.0.0.1'].includes(origin.hostname);
+  const local = (process.env.VERCEL || process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME) ? false : ['localhost', '127.0.0.1'].includes(origin.hostname);
   if (origin.host !== host || (!local && origin.protocol !== 'https:')) {
     throw new HttpError(403, 'مصدر الطلب غير مسموح.');
   }
@@ -61,7 +61,7 @@ export async function requireAdmin(request) {
 }
 
 function cookie(value, age) {
-  return `${cookieName}=${value}; Path=/api/admin; HttpOnly; SameSite=Strict; Max-Age=${age}${process.env.VERCEL ? '; Secure' : ''}`;
+  return `${cookieName}=${value}; Path=/api/admin; HttpOnly; SameSite=Strict; Max-Age=${age}${(process.env.VERCEL || process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME) ? '; Secure' : ''}`;
 }
 
 export async function loginAdmin(input) {

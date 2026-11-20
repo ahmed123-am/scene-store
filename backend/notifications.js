@@ -7,7 +7,7 @@ export async function notifyNewOrder(result) {
 
   const order = result.order;
   const text = [
-    '📦 طلب جديد — SCÈNE',
+    '📦 طلب جديد — س',
     `رقم الطلب: ${order.id}`,
     ...(order.items?.length ? order.items.map(item => `• ${item.productName} × ${item.quantity} — ${item.subtotal} جنيه`) : [`المجسم: ${order.productName}`]),
     `الكمية: ${order.quantity}`,
@@ -22,7 +22,7 @@ export async function notifyNewOrder(result) {
 export async function notifyCustomRequest(result) {
   if (result.replayed) return;
   const text = [
-    '✦ طلب مجسم مخصص — SCÈNE',
+    '✦ طلب مجسم مخصص — س',
     'رقم الطلب: ' + result.receipt.id,
     'الكمية: ' + result.receipt.quantity,
     'الوصف: ' + result.details.description.slice(0,500),

@@ -61,9 +61,9 @@ export default function OrderDialog({ open, cart, onClose }) {
   const count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
   return (
     <dialog ref={dialog} className="order-dialog cart-dialog" aria-labelledby="order-title" onClose={onClose} onCancel={event => { if (busy) event.preventDefault(); }}>
-      <div className="order-dialog-header"><span dir="ltr">SCÈNE</span><button type="button" className="order-close" aria-label="إغلاق السلة" disabled={busy} onClick={onClose}>×</button></div>
+      <div className="order-dialog-header"><span dir="ltr">س</span><button type="button" className="order-close" aria-label="إغلاق السلة" disabled={busy} onClick={onClose}>×</button></div>
       {receipt ? <div className="order-receipt">
-        <span className="receipt-check" aria-hidden="true">✓</span><h2 id="order-title" ref={receiptHeading} tabIndex="-1">استلمنا طلبك.</h2><p>كل القطع في أوردر واحد، بانتظار التأكيد من فريق سين.</p>
+        <span className="receipt-check" aria-hidden="true">✓</span><h2 id="order-title" ref={receiptHeading} tabIndex="-1">استلمنا طلبك.</h2><p>كل القطع في أوردر واحد، بانتظار التأكيد من فريق س.</p>
         <div className="receipt-number"><span>رقم الطلب</span><strong dir="ltr">{receipt.id}</strong></div>
         <ul className="cart-receipt-items">{(receipt.items || []).map(item => <li key={item.productId}><span>{item.productName} × {item.quantity}</span><strong>{money.format(item.subtotal)}</strong></li>)}</ul>
         <dl className="receipt-summary"><div><dt>إجمالي القطع</dt><dd>{receipt.quantity}</dd></div><div><dt>قيمة المنتجات</dt><dd>{money.format(receipt.subtotal)}</dd></div></dl>

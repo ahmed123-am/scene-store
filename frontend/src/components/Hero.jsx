@@ -3,9 +3,9 @@ import { getProducts } from '../api/products.js';
 import WaveTitle from './WaveTitle.jsx';
 
 const themes = [
-  { background: '#d7caf1', ink: '#312242', accent: '#72509c' },
-  { background: '#e4d9f3', ink: '#312242', accent: '#72509c' },
-  { background: '#cfc0e8', ink: '#312242', accent: '#72509c' },
+  { background: '#eeeee4', ink: '#242724', accent: '#64754a' },
+  { background: '#e5ead9', ink: '#242724', accent: '#64754a' },
+  { background: '#e9e3d7', ink: '#242724', accent: '#64754a' },
 ];
 
 const priceFormatter = new Intl.NumberFormat('ar-EG', {
@@ -79,19 +79,19 @@ export default function Hero({ onInquiry, onOrder }) {
     <section
       className="theater"
       id="products"
-      aria-label="استكشف مجسمات سين"
+      aria-label="استكشف مجسمات س"
       style={{ '--stage-bg': theme.background, '--stage-ink': theme.ink, '--stage-accent': theme.accent }}
       onKeyDown={handleKey}
     >
       <div className="theater-topline">
-        <p><span dir="ltr">SCÈNE</span> / من التصميم لمساحتك.</p>
-        <a href="#about">عن سين <span aria-hidden="true">↙</span></a>
+        <p><span className="s-hero-tag">س / قطع ليها شخصية</span></p>
+        <a href="#about">عن س <span aria-hidden="true">↙</span></a>
       </div>
 
       {product ? (
         <>
           <h1 className="theater-word" key={'title-' + product.id} aria-label={product.name}><WaveTitle text={product.name} /></h1>
-          <div className="theater-orbit" aria-hidden="true" />
+          <div className="theater-orbit" aria-hidden="true" /><div className="s-hero-seal" aria-hidden="true"><span className="s-mark"/><small>من خيالنا لإيدك</small></div>
           <div
             className="theater-figure"
             onPointerDown={(event) => {
@@ -167,7 +167,7 @@ export default function Hero({ onInquiry, onOrder }) {
           {loading ? 'بنجهّز المشهد…' : error ? 'شغّل الباك إند وحدّث الصفحة عشان نعرض المجسمات.' : 'المجسمات الجديدة هتظهر هنا قريب.'}
         </div>
       )}
-      <a className="theater-scroll" href="#about" aria-label="اعرف أكتر عن سين">↓</a>
+      <a className="theater-scroll" href="#about" aria-label="اعرف أكتر عن س">↓</a>
     </section>
   );
 }

@@ -45,7 +45,7 @@ export default function Collection() {
 
       {products?.length === 0 && (
         <p className="empty">
-          أول مجموعة من مجسمات SCÈNE هتتعرض هنا قريب.
+          أول مجموعة من مجسمات س هتتعرض هنا قريب.
         </p>
       )}
 

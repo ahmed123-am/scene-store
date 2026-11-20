@@ -1,21 +1,4 @@
 import React from 'react';
-
 export default function About() {
-  return (
-    <section className="about-section brand-story" id="about" aria-labelledby="about-title">
-      <div className="brand-story-copy">
-        <p className="section-label">إحنا سين</p>
-        <h2 id="about-title">بنصمّمها.<br /><span>وبنصنعها.</span></h2>
-        <p className="brand-story-description">
-          من أول التصميم الرقمي لحد ما يبقى مجسم بين إيديك،
-          دي طريقتنا في SCÈNE لصناعة قطع تضيف طابعك للمكان.
-        </p>
-        <a href="#products" className="text-link">اختار قطعتك <span aria-hidden="true">↖</span></a>
-      </div>
-      <div className="brand-signature">
-        <img src="/scene.jpeg" alt="شعار سين الأصلي" width="1024" height="1024" />
-        <p>تصميم وتصنيع ثلاثي الأبعاد</p>
-      </div>
-    </section>
-  );
+ return <section className="about-section brand-story s-story" id="about" aria-labelledby="about-title"><div className="brand-story-copy"><p className="section-label">حرف واحد. واحتمالات كتير.</p><h2 id="about-title">اسمنا حرف.<br/><span>وشغلنا تفاصيل.</span></h2><p className="brand-story-description">إحنا «س». بنصمّم مجسمات تتشاف، وتتلمس، وتضيف حاجة منك للمكان. من أول سكتش لآخر طبقة طباعة، كل تفصيلة ليها حساب.</p><a href="#products" className="text-link">اختار حاجة تشبهك <span aria-hidden="true">↖</span></a><div className="s-process"><span><b>٠١</b> بنتخيّل</span><i>←</i><span><b>٠٢</b> بنصمّم</span><i>←</i><span><b>٠٣</b> بنصنع</span></div></div><div className="brand-signature s-signature" aria-label="شعار س، طبقة ورا طبقة"><div className="s-card-meta"><span>من تصميمنا، ومن صنعنا</span><span>س / ٠١</span></div><div className="s-layer-stack" aria-hidden="true">{Array.from({length:6},(_,i)=><span key={i} className="s-mark" style={{'--layer':i}}/>)}</div><div className="s-card-caption"><span>كل قطعة تبدأ بفكرة.</span><b>وتكمل بيك ↖</b></div><span className="s-registration" aria-hidden="true">＋</span></div></section>;
 }

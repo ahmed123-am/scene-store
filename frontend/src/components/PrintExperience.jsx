@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 const stages = [
   {
     title: 'كل مجسم بيبدأ بفكرة.',
-    description: 'انزل وشوف سين بتاخد شكلها.',
+    description: 'انزل وشوف س بتاخد شكلها.',
   },
   {
     title: 'طبقة فوق طبقة.',
@@ -11,7 +11,7 @@ const stages = [
   },
   {
     title: 'الفكرة بقت بين إيديك.',
-    description: 'اكتشف مجسمات SCÈNE.',
+    description: 'اكتشف مجسمات س.',
   },
 ];
 
@@ -114,7 +114,7 @@ export default function PrintExperience() {
     <section
       className="print-experience"
       ref={sectionRef}
-      aria-label="رحلة طباعة سين"
+      aria-label="رحلة طباعة س"
     >
       <div className="print-stage">
         <div className="print-copy">
@@ -135,7 +135,7 @@ export default function PrintExperience() {
           preload="auto"
           muted
           playsInline
-          aria-label="ماكينة ثلاثية الأبعاد بتطبع سين"
+          aria-label="ماكينة ثلاثية الأبعاد بتطبع س"
           onError={() => setFailed(true)}
         />
 

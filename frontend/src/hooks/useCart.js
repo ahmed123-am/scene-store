@@ -10,7 +10,7 @@ function initial() {
     const items = saved.map(item => {
       if (typeof item?.id !== 'string' || item.id.length > 120 || seen.has(item.id) || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 50) throw new Error();
       seen.add(item.id);
-      return { id: item.id, quantity: item.quantity, name: 'منتج محتاج تحديث', price: 0, image: '/scene.jpeg', unavailable: true };
+      return { id: item.id, quantity: item.quantity, name: 'منتج محتاج تحديث', price: 0, image: '/brand/s-mark.svg', unavailable: true };
     });
     if (items.reduce((sum, item) => sum + item.quantity, 0) > 50) throw new Error();
     return { items, notice: '' };

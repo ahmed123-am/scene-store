@@ -27,7 +27,7 @@ export default function Admin() {
   const loadVersion = useRef(0);
 
   useEffect(() => {
-    document.title = 'SCÈNE | إدارة الطلبات';
+    document.title = 'س | إدارة الطلبات';
     const controller = new AbortController();
     api('session', undefined, controller.signal).then(data => setSession(data.user)).catch(failure => {
       if (controller.signal.aborted) return;
@@ -96,7 +96,7 @@ export default function Admin() {
   return (
     <div className="admin-shell" dir="rtl">
       <aside className="admin-sidebar">
-        <a href="/" className="admin-brand"><img src="/scene.jpeg" alt="سين" /><span>SCÈNE<small>مساحة الإدارة</small></span></a>
+        <a href="/" className="admin-brand"><img src="/brand/s-mark.svg" alt="س" /><span>س<small>مساحة الإدارة</small></span></a>
         <div className="admin-side-label">الاستوديو بتاعك</div>
         <nav className="admin-sections" aria-label="أقسام الإدارة">
           <button type="button" className={section === 'orders' ? 'admin-nav-active' : ''} aria-current={section === 'orders' ? 'page' : undefined} onClick={() => setSection('orders')}>▤ <span>الطلبات</span><span>↖</span></button>
@@ -105,17 +105,17 @@ export default function Admin() {
         </nav>
         <a href="/" className="admin-store-link">افتح المتجر ↗</a>
         <p className="admin-side-note">من أول فكرة،<br />لحد باب العميل.</p>
-        <span className="admin-side-bottom">SCÈNE / ORDER DESK</span>
+        <span className="admin-side-bottom">س / مساحة الإدارة</span>
       </aside>
 
       <main className="admin-main">
-        <header className="admin-top"><span>سين / إدارة المتجر</span>{session && <div><span className="admin-email" dir="ltr">{session.email}</span><button disabled={busy} onClick={logout}>خروج ↗</button></div>}</header>
+        <header className="admin-top"><span>س / إدارة المتجر</span>{session && <div><span className="admin-email" dir="ltr">{session.email}</span><button disabled={busy} onClick={logout}>خروج ↗</button></div>}</header>
 
         {session === undefined ? <p className="admin-loading" role="status">بنراجع جلسة الدخول…</p> : !session ? (
           <section className="admin-login">
             <span className="admin-eyebrow">أهلًا بيك في الكواليس</span>
             <h1>كل طلب،<br /><em>بداية حكاية.</em></h1>
-            <p>سجّل دخولك عشان تتابع طلبات سين.</p>
+            <p>سجّل دخولك عشان تتابع طلبات س.</p>
             <form onSubmit={login}>
               <label>الإيميل<input name="email" type="email" dir="ltr" autoComplete="username" maxLength="254" required placeholder="you@example.com" /></label>
               <label>كلمة المرور<input name="password" type="password" dir="ltr" autoComplete="current-password" maxLength="256" required /></label>
@@ -125,7 +125,7 @@ export default function Admin() {
           </section>
         ) : section === 'products' ? <Products onSessionExpired={() => { setSession(null); setOrders([]); }} /> : section === 'custom' ? <CustomRequests onSessionExpired={() => { setSession(null); setOrders([]); }} /> : (
           <section className="admin-content">
-            <div className="admin-heading"><div><span className="admin-eyebrow">من المتجر للاستوديو</span><h1>طلبات سين<span>.</span></h1><p>كل التفاصيل في مكان واحد، من أول طلب لحد التسليم.</p></div><button className="admin-refresh" disabled={loading || busy} onClick={() => setRefresh(value => value + 1)}>تحديث الطلبات ↻</button></div>
+            <div className="admin-heading"><div><span className="admin-eyebrow">من المتجر للاستوديو</span><h1>طلبات س<span>.</span></h1><p>كل التفاصيل في مكان واحد، من أول طلب لحد التسليم.</p></div><button className="admin-refresh" disabled={loading || busy} onClick={() => setRefresh(value => value + 1)}>تحديث الطلبات ↻</button></div>
             <div className="admin-stats"><div><span>الطلبات المعروضة</span><strong>{loading ? '—' : orders.length.toLocaleString('ar-EG')}</strong></div><div><span>قيمة المنتجات في الصفحة</span><strong>{loading ? '—' : money(pageTotal)}</strong><small>بدون الشحن · يشمل الملغي لو ظاهر</small></div><div className="admin-stat-accent"><span>المرحلة الحالية</span><strong>{filter ? labels[filter] : 'كل الطلبات'}</strong><small>الصفحة {(page + 1).toLocaleString('ar-EG')}</small></div></div>
             <div className="admin-toolbar"><label htmlFor="order-filter">عرض الطلبات<select id="order-filter" value={filter} disabled={busy} onChange={event => { setFilter(event.target.value); setPage(0); setNotice(''); }}><option value="">كل الحالات</option>{Object.entries(labels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><span>الأحدث أولًا · التوقيت بتوقيت القاهرة</span></div>
             {notice && <p className="admin-notice" role="status">✓ {notice}</p>}

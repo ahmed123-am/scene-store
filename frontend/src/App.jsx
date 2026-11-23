@@ -4,6 +4,7 @@ import Hero from './components/Hero.jsx';
 import About from './components/About.jsx';
 
 import Contact from './components/Contact.jsx';
+import PrintQuote from './components/PrintQuote.jsx';
 import Footer from './components/Footer.jsx';
 import OrderDialog from './components/OrderDialog.jsx';
 import { useCart } from './hooks/useCart.js';
@@ -76,6 +77,8 @@ export default function App() {
       <main>
         <Hero onInquiry={setInquiryProduct} onOrder={cart.add} />
 
+        <div className="reveal"><PrintQuote /></div>
+
         <div className="reveal">
           <About />
         </div>
@@ -92,6 +95,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
